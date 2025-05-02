@@ -2,25 +2,30 @@
 {
     public class CajaDeAhorro : CuentaBancaria
     {
-        public CajaDeAhorro(string numero, decimal saldo, string[] titulares, decimal tasaDeInteres) : base(numero, saldo, titulares)
+        public CajaDeAhorro(string numero, decimal saldo, string[] titulares) : base(numero, saldo, titulares)
         {
-            TasaDeInteres = tasaDeInteres;
+            
         }
         public override void Depositar(decimal monto) { 
+            VerificarMontoEstado(monto);
             Saldo += monto;
         }
 
         public override void Retirar(decimal monto)
         {
+            if (Saldo < monto) { 
+            Estado = Estado.Suspendida;
+            throw new SaldoInsuficiente("Saldo insuficiente");
+        }
             Saldo -= monto;
-            if ( Saldo<0)
-                Estado=Estado.Suspendida;
-            
-                
-            }
+
+        }
         public override void AplicarInteres()
         {
-            Saldo += Saldo * TasaDeInteres;
+            if (TasaDeInteres > 0)
+            {
+                Saldo += Saldo * TasaDeInteres;
+            }
         }
         
     }
